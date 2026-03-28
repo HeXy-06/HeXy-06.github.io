@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>03-27 | Wander's World</title><meta name="author" content="HeXy-06"><meta name="copyright" content="HeXy-06"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="博士论文精读笔记（Ⅲ）：泛化理论的拓扑学与泛函分析基石阅读背景与核心动机：在深入研究基于信息论的泛化界之前，必须为极其高维（甚至无穷维）的神经网络参数空间与概率测度空间建立严密的数学地基。本部分引入拓扑学与泛函分析公理，其根本目的是合法化后续的概率测度积分（如计算 KL 散度和互信息），并利用紧致性来从根本上限制模型家族的覆盖数（Covering Number），从而在严密的数学意义上锁定泛化界。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03-27">
+<meta property="og:url" content="https://hexy-06.github.io/2026/03/28/03-27/index.html">
+<meta property="og:site_name" content="Wander&#39;s World">
+<meta property="og:description" content="博士论文精读笔记（Ⅲ）：泛化理论的拓扑学与泛函分析基石阅读背景与核心动机：在深入研究基于信息论的泛化界之前，必须为极其高维（甚至无穷维）的神经网络参数空间与概率测度空间建立严密的数学地基。本部分引入拓扑学与泛函分析公理，其根本目的是合法化后续的概率测度积分（如计算 KL 散度和互信息），并利用紧致性来从根本上限制模型家族的覆盖数（Covering Number），从而在严密的数学意义上锁定泛化界。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hexy-06.github.io/img/avatar_537.png">
+<meta property="article:published_time" content="2026-03-28T00:25:22.000Z">
+<meta property="article:modified_time" content="2026-03-28T00:26:34.993Z">
+<meta property="article:author" content="HeXy-06">
+<meta property="article:tag" content="Information Theory">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hexy-06.github.io/img/avatar_537.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "03-27",
+  "url": "https://hexy-06.github.io/2026/03/28/03-27/",
+  "image": "https://hexy-06.github.io/img/avatar_537.png",
+  "datePublished": "2026-03-28T00:25:22.000Z",
+  "dateModified": "2026-03-28T00:26:34.993Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "HeXy-06",
+      "url": "https://hexy-06.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://hexy-06.github.io/2026/03/28/03-27/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '03-27',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><style>body{cursor:url('/cursor/537.cur'), auto;} a, img{cursor:url('/cursor/537.cur'), auto;}</style><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar_537.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Wander's World</span></a><a class="nav-page-title" href="/"><span class="site-name">03-27</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">03-27</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-28T00:25:22.000Z" title="发表于 2026-03-28 08:25:22">2026-03-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-28T00:26:34.993Z" title="更新于 2026-03-28 08:26:34">2026-03-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Research/">Research</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="博士论文精读笔记（Ⅲ）：泛化理论的拓扑学与泛函分析基石"><a href="#博士论文精读笔记（Ⅲ）：泛化理论的拓扑学与泛函分析基石" class="headerlink" title="博士论文精读笔记（Ⅲ）：泛化理论的拓扑学与泛函分析基石"></a>博士论文精读笔记（Ⅲ）：泛化理论的拓扑学与泛函分析基石</h1><p><strong>阅读背景与核心动机</strong>：<br>在深入研究基于信息论的泛化界之前，必须为极其高维（甚至无穷维）的神经网络参数空间与概率测度空间建立严密的数学地基。本部分引入拓扑学与泛函分析公理，其根本目的是<strong>合法化后续的概率测度积分（如计算 KL 散度和互信息）</strong>，并利用<strong>紧致性</strong>来从根本上限制模型家族的覆盖数（Covering Number），从而在严密的数学意义上锁定泛化界。</p>
+<hr>
+<h2 id="模块一：分离公理-Separation-Axioms-——-保证空间的区分度与极限唯一性"><a href="#模块一：分离公理-Separation-Axioms-——-保证空间的区分度与极限唯一性" class="headerlink" title="模块一：分离公理 (Separation Axioms) —— 保证空间的区分度与极限唯一性"></a>模块一：分离公理 (Separation Axioms) —— 保证空间的区分度与极限唯一性</h2><p>分离公理研究的是在一个拓扑空间 $(\mathcal{X}, \mathcal{T})$ 中，用开集（Open Sets，可视为局部的“隔离罩”）将不同的点或闭集区分开的严苛程度。</p>
+<ul>
+<li><strong>定义 2.7（分离公理）</strong>：<ul>
+<li><strong>$T_0$ 空间</strong>：对任意 $x, y \in \mathcal{X}$ 且 $x \ne y$，存在开集 $U \in \mathcal{T}$ 使得 $(x \in U \land y \notin U) \lor (y \in U \land x \notin U)$。（能区分单边）</li>
+<li><strong>$T_1$ 空间</strong>：对任意 $x, y \in \mathcal{X}$ 且 $x \ne y$，存在开集 $U, V \in \mathcal{T}$ 使得 $x \in U \land y \notin U$ 且 $y \in V \land x \notin V$。（双向均可区分，但开集可能相交）</li>
+<li><strong>$T_2$ 空间 (Hausdorff 豪斯多夫空间)</strong>：对任意 $x, y \in \mathcal{X}$ 且 $x \ne y$，存在<strong>不相交</strong>的开集 $U, V \in \mathcal{T}$ 使得 $x \in U, y \in V, U \cap V = \emptyset$。</li>
+<li><strong>$T_3$ 空间 (正则空间)</strong>：满足 $T_1$，且对任意闭集 $F \subseteq \mathcal{X}$ 和点 $x \notin F$，存在不相交开集 $U, V$ 使得 $x \in U, F \subseteq V$。</li>
+<li><strong>$T_{3\frac{1}{2}}$ 空间 (完全正则/Tychonoff 空间)</strong>：满足 $T_1$，且对任意闭集 $F$ 和点 $x \notin F$，存在<strong>连续函数</strong> $f: \mathcal{X} \to [0,1]$ 使得 $f(x) = 0$ 且 $\forall y \in F, f(y) = 1$。</li>
+<li><strong>$T_4$ 空间 (正规空间)</strong>：满足 $T_1$，且对任意不相交闭集 $F_1, F_2$，存在不相交开集 $U, V$ 将它们隔离。</li>
+</ul>
+</li>
+</ul>
+<p><strong>【在机器学习中的学术意义】</strong>：<br>在机器学习优化的理论分析中，我们默认参数空间至少是 <strong>Hausdorff ($T_2$) 空间</strong>。这在数学上保证了模型参数序列（如 SGD 轨迹）的<strong>极限是唯一的</strong>。同时，高级空间（如 $T_{3\frac{1}{2}}$）保证了空间上存在足够丰富的连续函数，这是建立概率测度（如 Radon 测度）的先决条件。</p>
+<hr>
+<h2 id="模块二：可数性公理-Countability-Axioms-——-连续空间的可计算性桥梁"><a href="#模块二：可数性公理-Countability-Axioms-——-连续空间的可计算性桥梁" class="headerlink" title="模块二：可数性公理 (Countability Axioms) —— 连续空间的可计算性桥梁"></a>模块二：可数性公理 (Countability Axioms) —— 连续空间的可计算性桥梁</h2><p>可数性公理探讨的是如何用“可数（Countable，即能用自然数 $\mathbb{N}$ 编号）”的基础单元来刻画极其复杂、不可数的连续空间。</p>
+<ul>
+<li><strong>定义 2.8（可数性公理）</strong>：<ul>
+<li><strong>第一可数空间</strong>：任意 $x \in \mathcal{X}$ 存在可数邻域基 $\mathcal{B}_x = {B_n(x) \mid n \in \mathbb{N}}$。即任意包含 $x$ 的开集 $U$，总有 $B_n(x) \subseteq U$。（局部可逼近）</li>
+<li><strong>第二可数空间</strong>：存在全局的可数基 $\mathcal{B} = {B_n \mid n \in \mathbb{N}}$，使得 $\mathcal{T}$ 中每个开集均可表示为 $\mathcal{B}$ 中某些元素的并。（全局架构可精简）</li>
+<li><strong>可分空间 (Separable)</strong>：存在<strong>可数稠密子集</strong> $D \subseteq \mathcal{X}$，即 $\overline{D} = \mathcal{X}$。（可以用可数集合无限逼近连续空间全体，例如实数空间中的有理数集）。</li>
+<li><strong>Lindelöf 空间</strong>：$\mathcal{X}$ 的每个开覆盖均有<strong>可数子覆盖</strong>。</li>
+</ul>
+</li>
+</ul>
+<p><strong>【定理补充与泛化意义】</strong>：<br><strong>等价性</strong>：如果空间是可度量化的（Metrizable，如具备距离度量的神经网络参数空间），则<strong>可分性 $\iff$ Lindelöf $\iff$ 第二可数</strong>。<br><strong>学术意义</strong>：“可分性”是机器学习理论的核心前提。它保证了我们可以用有限精度的离散计算机浮点数，去无损逼近连续的、不可数的模型参数空间，且在计算互信息和期望积分时不会遇到测度论上的悖论（保证了可测性）。</p>
+<hr>
+<h2 id="模块三：紧致性体系-Compactness-——-控制模型容量的绝对核心"><a href="#模块三：紧致性体系-Compactness-——-控制模型容量的绝对核心" class="headerlink" title="模块三：紧致性体系 (Compactness) —— 控制模型容量的绝对核心"></a>模块三：紧致性体系 (Compactness) —— 控制模型容量的绝对核心</h2><p>紧致性（在欧式空间中可直观理解为“有界且闭合”）是限制模型参数空间、防止覆盖数爆炸的终极数学工具。</p>
+<ul>
+<li><strong>定义 2.9（紧集与预紧集）</strong>：若 $K$ 的任意开覆盖都有<strong>有限子覆盖</strong>，则称 $K$ 为紧致 (Compact)。若 $A$ 的闭包 $\overline{A}$ 是紧致的，则称 $A$ 为预紧 (Precompact)。</li>
+<li><strong>定义 2.10（序列紧致性）</strong>：$K$ 中任意序列存在<strong>收敛的子序列</strong>。（保证 SGD 等迭代算法在有界空间内必有收敛极限）。</li>
+<li><strong>定义 2.11（局部紧致性）</strong>：任意 $x \in \mathcal{X}$，存在紧邻域（即 $x \in U \subseteq K$，其中 $U$ 为开集，$K$ 为紧集）。（这是定义完备概率积分理论的基础）。</li>
+<li><strong>定义 2.12（$\sigma$-紧致性）</strong>：空间可表示为可数个紧致子集的并集：$\mathcal{X} = \bigcup_{n=1}^\infty K_n$。（允许我们在局部的紧集上证明泛化定理后，安全地取极限推广到全局无界空间）。</li>
+</ul>
+<hr>
+<h2 id="模块四：度量空间与连续映射-——-扰动稳定性分析"><a href="#模块四：度量空间与连续映射-——-扰动稳定性分析" class="headerlink" title="模块四：度量空间与连续映射 —— 扰动稳定性分析"></a>模块四：度量空间与连续映射 —— 扰动稳定性分析</h2><p>当拓扑空间被赋予具体的距离测度 $\rho$ 后，泛化分析获得了精确计算的工具。</p>
+<ul>
+<li><strong>定理 2.1（预紧集与完全有界集）</strong>：设度量空间 $(\mathcal{X}, \rho)$，子集 $A$ 是预紧集 $\iff$ $A$ 是<strong>完全有界集 (Totally Bounded Set)</strong>。<ul>
+<li><em>学术映射</em>：完全有界意味着给定任意精度 $\epsilon &gt; 0$，集合 $A$ 都能被<strong>有限个</strong> $\epsilon$-球覆盖。这是计算经验 Rademacher 复杂度时，运用 Dudley 积分和有限覆盖数 $\mathcal{N}(\epsilon)$ 的法理基础。限制网络参数范数，即是使其完全有界。</li>
+</ul>
+</li>
+<li><strong>定义 2.15（连续映射）</strong>：<ul>
+<li>拓扑定义：目标空间中任意开集 $V$ 的原像 $f^{-1}(V)$ 是开集。</li>
+<li>度量空间定义：$\forall x_0 \in \mathcal{X}$ 和 $\forall \epsilon &gt; 0$，存在 $x_0$ 的邻域 $U$，使得 $\forall x \in U$，有 $\rho(f(x), f(x_0)) &lt; \epsilon$。</li>
+<li><em>学术映射</em>：保证了算法或损失函数具备“扰动稳定性”。数据的微小变化不会导致模型输出或泛化误差的剧烈崩溃。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="模块五：泛函分析与-Arzela-Ascoli-定理-——-模型家族泛化能力的王冠"><a href="#模块五：泛函分析与-Arzela-Ascoli-定理-——-模型家族泛化能力的王冠" class="headerlink" title="模块五：泛函分析与 Arzelà-Ascoli 定理 —— 模型家族泛化能力的王冠"></a>模块五：泛函分析与 Arzelà-Ascoli 定理 —— 模型家族泛化能力的王冠</h2><p>本模块完成视角升维：从研究单一模型点，转向研究由大量模型构成的<strong>函数空间 $\mathcal{C}(\mathcal{X}, \mathcal{Y})$</strong>。</p>
+<h3 id="1-函数序列的收敛拓扑"><a href="#1-函数序列的收敛拓扑" class="headerlink" title="1. 函数序列的收敛拓扑"></a>1. 函数序列的收敛拓扑</h3><ul>
+<li><strong>定义 2.16（点态收敛拓扑 $\mathcal{T}_{p.c.}$）</strong>：${f_n}$ 收敛于 $f \iff \forall x \in \mathcal{X}, f_n(x) \to f(x)$。（条件太弱，极限可能不连续，易过拟合）。</li>
+<li><strong>定义 2.17（一致收敛拓扑 $\mathcal{T}_{u.c.}$）</strong>：基于度量 $d(f, g) = \sup_{x\in\mathcal{X}} \rho(f(x), g(x))$ 的拓扑。（条件太强，要求整个无界宇宙空间同时逼近，通常无法满足）。</li>
+<li><strong>定义 2.18（紧致收敛拓扑 $\mathcal{T}_{c.c.}$）</strong>：${f_n}$ 在<strong>任意紧子集 $K \subseteq \mathcal{X}$ 上一致收敛</strong>于 $f$。（黄金标准，深度学习泛化分析的主流框架）。</li>
+</ul>
+<h3 id="2-导出函数族紧致性的两大前提"><a href="#2-导出函数族紧致性的两大前提" class="headerlink" title="2. 导出函数族紧致性的两大前提"></a>2. 导出函数族紧致性的两大前提</h3><p>为了证明一个庞大的神经网络模型家族 $\mathcal{F}$ 不会发散且覆盖数有限，需满足：</p>
+<ul>
+<li><strong>定义 2.19（等度连续性 Equicontinuity）</strong>：针对整个函数族 $\mathcal{F}$ 存在统一的平滑度。即对 $\forall \epsilon &gt; 0$ 和给定点 $x$，存在邻域 $U_x$，使得对<strong>任意 $f \in \mathcal{F}$</strong> 和 $x’ \in U_x$，均有 $\rho(f(x), f(x’)) &lt; \epsilon$。（在深度学习中，这通常通过谱归一化或限制 Lipschitz 常数来实现）。</li>
+<li><strong>定义 2.20（点态预紧性 Pointwise Precompactness）</strong>：对任意输入 $x$，整个模型家族的输出集合 ${f(x) \mid f \in \mathcal{F}}$ 是预紧的（例如分类任务的 Softmax 输出被锁死在 $[0,1]$ 有界域内）。</li>
+</ul>
+<h3 id="3-Arzela-Ascoli-定理-——-终极闭环"><a href="#3-Arzela-Ascoli-定理-——-终极闭环" class="headerlink" title="3. Arzelà-Ascoli 定理 —— 终极闭环"></a>3. Arzelà-Ascoli 定理 —— 终极闭环</h3><ul>
+<li><strong>定理 2.2 (Arzelà-Ascoli 定理)</strong>：若连续映射族 $\mathcal{F} \subseteq \mathcal{C}(\mathcal{X}, \mathcal{Y})$ 是<strong>点态等度连续</strong>且<strong>点态预紧</strong>的，则 $\mathcal{F}$ 的闭包是 $(\mathcal{C}(\mathcal{X}, \mathcal{Y}), \mathcal{T}_{c.c.})$ 中的<strong>紧子集</strong>。</li>
+<li><strong>泛化理论大闭环</strong>：<br>该定理是整个现代泛化理论得以落地的核心引擎：<ol>
+<li>限制模型参数/梯度 (等度连续) + 输出有界 (点态预紧)</li>
+<li>$\xrightarrow{\text{Arzelà-Ascoli}}$ 模型家族所处的空间是<strong>紧集</strong>。</li>
+<li>$\xrightarrow{\text{定义 2.9 &amp; 定理 2.1}}$ 紧集拥有<strong>有限的覆盖数</strong> $\mathcal{N}(\epsilon)$。</li>
+<li>$\xrightarrow{\text{Dudley积分}}$ 模型的 <strong>Rademacher 复杂度被严格界定</strong>。</li>
+<li><strong>结论</strong>：模型不会发生灾难性过拟合，泛化界成立。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<p><strong>小结</strong>：至此，作者已建立起无懈可击的数学免责护城河。接下来的论文正文，将在这些严密的测度与拓扑结构上，光明正大地展开互信息 $I(W;S)$ 和 KL散度 等信息论核心公式的推导。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hexy-06.github.io">HeXy-06</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hexy-06.github.io/2026/03/28/03-27/">https://hexy-06.github.io/2026/03/28/03-27/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hexy-06.github.io" target="_blank">Wander's World</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Information-Theory/">Information Theory</a><a class="post-meta__tags" href="/tags/Machine-Learning/">Machine Learning</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar_537.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/03/27/03-26/" title="03-26"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">03-26</div></div><div class="info-2"><div class="info-item-1">博士论文精读笔记：《基于信息论的机器学习泛化性分析》（Ⅱ）阅读背景：现代深度神经网络（DNN）具有极其巨大的参数量（远超训练样本量），但不仅没有发生灾难性的过拟合，反而展现出惊人的泛化能力。传统的统计学习理论（SLT）在此遭遇了严重的“空泛界（Vacuous Bound）”危机。本论文旨在引入“信息论（Information Theory）”工具，从算法的“信息记忆与处理”视角重构机器学习的泛化理论。  模块一：传统统计学习理论（SLT）的基石与失效1. 结构风险最小化 (SRM) 与 VC 维理论早期模型（如 SVM）遵循结构风险最小化原则，即在降低经验风险（训练误差）的同时，控制模型的复杂度以约束泛化鸿沟。  增长函数 $\Pi_\mathcal{F}(n)$：衡量模型空间 $\mathcal{F}$ 在 $n$ 个数据点上最多能产生的二分类标记组合数（即有效模型行为数）。 VC 维 (Vapnik-Chervonenkis Dimension)：模型能够完美“打散 (Shatter)”（实现所有 $2^n$ 种分类可能）的最大样本子集规模。反映了模型的绝对“记忆容量”。 经...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/03/27/03-26/" title="03-26"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-27</div><div class="info-item-2">03-26</div></div><div class="info-2"><div class="info-item-1">博士论文精读笔记：《基于信息论的机器学习泛化性分析》（Ⅱ）阅读背景：现代深度神经网络（DNN）具有极其巨大的参数量（远超训练样本量），但不仅没有发生灾难性的过拟合，反而展现出惊人的泛化能力。传统的统计学习理论（SLT）在此遭遇了严重的“空泛界（Vacuous Bound）”危机。本论文旨在引入“信息论（Information Theory）”工具，从算法的“信息记忆与处理”视角重构机器学习的泛化理论。  模块一：传统统计学习理论（SLT）的基石与失效1. 结构风险最小化 (SRM) 与 VC 维理论早期模型（如 SVM）遵循结构风险最小化原则，即在降低经验风险（训练误差）的同时，控制模型的复杂度以约束泛化鸿沟。  增长函数 $\Pi_\mathcal{F}(n)$：衡量模型空间 $\mathcal{F}$ 在 $n$ 个数据点上最多能产生的二分类标记组合数（即有效模型行为数）。 VC 维 (Vapnik-Chervonenkis Dimension)：模型能够完美“打散 (Shatter)”（实现所有 $2^n$ 种分类可能）的最大样本子集规模。反映了模型的绝对“记忆容量”。 经...</div></div></div></a><a class="pagination-related" href="/2026/03/25/03-24/" title="03-24"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-25</div><div class="info-item-2">03-24</div></div><div class="info-2"><div class="info-item-1">博士论文阅读笔记：《基于信息论的机器学习泛化性分析》（Ⅰ）核心主线：从统计学习理论到信息论本篇论文的核心出发点在于：传统统计学习理论（SLT）在解释现代深度学习的“超强泛化能力”时遭遇了严重危机。模型参数量远超训练样本量却不发生灾难性过拟合，使得基于模型“静态容量”（如 VC 维）的泛化界变得空泛。为此，理论界必须实现向“算法动态记忆量度”（如 PAC-Bayes 和 信息论）的范式转移。  第一部分：传统统计学习理论的基石与困境早期的机器学习模型（如 SVM）基于结构风险最小化原则 (Structural Risk Minimization, SRM)，其核心思想是：既要降低经验风险（训练误差），又要控制模型的复杂度（泛化界）。 1. 有限假设空间的泛化界 (Occam’s Razor Bound)泛化性研究中最简单的情形是假设类（候选模型的总数）有限。利用 Hoeffding 不等式和联合界（Union Bound），对于有界损失函数 $\ell(w, z) \in [0,1]$，可以得出泛化上界：  \mathbb{P}_S \left( \forall w \in \ma...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar_537.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">HeXy-06</div><div class="author-info-description">在自己身上 克服这个时代</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/HeXy-06"><i class="fab fa-github"></i><span>Click to visit my GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/HeXy-06" target="_blank" title="GitHub"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:3240102760@zju.edu.cn" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Welcome to wander in <br> Wander's World!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%88%E2%85%A2%EF%BC%89%EF%BC%9A%E6%B3%9B%E5%8C%96%E7%90%86%E8%AE%BA%E7%9A%84%E6%8B%93%E6%89%91%E5%AD%A6%E4%B8%8E%E6%B3%9B%E5%87%BD%E5%88%86%E6%9E%90%E5%9F%BA%E7%9F%B3"><span class="toc-number">1.</span> <span class="toc-text">博士论文精读笔记（Ⅲ）：泛化理论的拓扑学与泛函分析基石</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E4%B8%80%EF%BC%9A%E5%88%86%E7%A6%BB%E5%85%AC%E7%90%86-Separation-Axioms-%E2%80%94%E2%80%94-%E4%BF%9D%E8%AF%81%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%86%E5%BA%A6%E4%B8%8E%E6%9E%81%E9%99%90%E5%94%AF%E4%B8%80%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">模块一：分离公理 (Separation Axioms) —— 保证空间的区分度与极限唯一性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E4%BA%8C%EF%BC%9A%E5%8F%AF%E6%95%B0%E6%80%A7%E5%85%AC%E7%90%86-Countability-Axioms-%E2%80%94%E2%80%94-%E8%BF%9E%E7%BB%AD%E7%A9%BA%E9%97%B4%E7%9A%84%E5%8F%AF%E8%AE%A1%E7%AE%97%E6%80%A7%E6%A1%A5%E6%A2%81"><span class="toc-number">1.2.</span> <span class="toc-text">模块二：可数性公理 (Countability Axioms) —— 连续空间的可计算性桥梁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E4%B8%89%EF%BC%9A%E7%B4%A7%E8%87%B4%E6%80%A7%E4%BD%93%E7%B3%BB-Compactness-%E2%80%94%E2%80%94-%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9E%8B%E5%AE%B9%E9%87%8F%E7%9A%84%E7%BB%9D%E5%AF%B9%E6%A0%B8%E5%BF%83"><span class="toc-number">1.3.</span> <span class="toc-text">模块三：紧致性体系 (Compactness) —— 控制模型容量的绝对核心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%9B%9B%EF%BC%9A%E5%BA%A6%E9%87%8F%E7%A9%BA%E9%97%B4%E4%B8%8E%E8%BF%9E%E7%BB%AD%E6%98%A0%E5%B0%84-%E2%80%94%E2%80%94-%E6%89%B0%E5%8A%A8%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90"><span class="toc-number">1.4.</span> <span class="toc-text">模块四：度量空间与连续映射 —— 扰动稳定性分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E4%BA%94%EF%BC%9A%E6%B3%9B%E5%87%BD%E5%88%86%E6%9E%90%E4%B8%8E-Arzela-Ascoli-%E5%AE%9A%E7%90%86-%E2%80%94%E2%80%94-%E6%A8%A1%E5%9E%8B%E5%AE%B6%E6%97%8F%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E7%9A%84%E7%8E%8B%E5%86%A0"><span class="toc-number">1.5.</span> <span class="toc-text">模块五：泛函分析与 Arzelà-Ascoli 定理 —— 模型家族泛化能力的王冠</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%87%BD%E6%95%B0%E5%BA%8F%E5%88%97%E7%9A%84%E6%94%B6%E6%95%9B%E6%8B%93%E6%89%91"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. 函数序列的收敛拓扑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AF%BC%E5%87%BA%E5%87%BD%E6%95%B0%E6%97%8F%E7%B4%A7%E8%87%B4%E6%80%A7%E7%9A%84%E4%B8%A4%E5%A4%A7%E5%89%8D%E6%8F%90"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. 导出函数族紧致性的两大前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Arzela-Ascoli-%E5%AE%9A%E7%90%86-%E2%80%94%E2%80%94-%E7%BB%88%E6%9E%81%E9%97%AD%E7%8E%AF"><span class="toc-number">1.5.3.</span> <span class="toc-text">3. Arzelà-Ascoli 定理 —— 终极闭环</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/28/03-27/" title="03-27">03-27</a><time datetime="2026-03-28T00:25:22.000Z" title="发表于 2026-03-28 08:25:22">2026-03-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/27/03-26/" title="03-26">03-26</a><time datetime="2026-03-26T16:32:22.000Z" title="发表于 2026-03-27 00:32:22">2026-03-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/25/03-24/" title="03-24">03-24</a><time datetime="2026-03-24T16:32:22.000Z" title="发表于 2026-03-25 00:32:22">2026-03-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/22/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-21T16:59:37.222Z" title="发表于 2026-03-22 00:59:37">2026-03-22</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By HeXy-06</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="https://npm.elemecdn.com/butterfly-extsrc@1/dist/fireworks.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
